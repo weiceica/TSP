@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>TSP Visuzlizer</title>
+        <meta charset = "UTF-8">
+        <meta name="description" content="A TSP heurestic/solver visualizer">  
+        <meta name="viewport" content="width=device-width, initial-sacle=1.0">
+        <link rel="stylesheet" href="style.css"> 
+        <script src="everything/grid.js"></script>
+    </head>
+    <body onload="initGrid()">
+        <nav>
+            <link rel="stylesheet" href="nav.css">
+            <label class="TSHI" ><a href="#" id="specialRyy"><b>TSP Visualizer</b></a></label>
+            <ul>
+                <li><a class="press" href="#">Algorithms</a>
+                    <div class ="submenu">
+                        <ul>
+                            <li><a href="#" id="startNearestInsertion">Nearest Insertion</a></li>
+                            <li><a href="#" id="startGreedy">Greedy Search</a></li>
+                            <li><a href="#" id="startNearestNeighbour">Nearest Neighbour</a></li>
+                            <li><a href="#" id="startBranchAndBound">Branch and Bound</a></li>
+                            <li><a href="#" id="startBruteForce">Brute Force</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li><a href="#">Patterns</a>
+                    <div class = "submenu">
+                        <ul>
+                            <li><a href="#" id="startRandom20">Random 20 Nodes</a></li>
+                            <li><a href="#" id="startRandom7">Random 7 Nodes</a></li>
+                            <li><a href="#" id="startSquare5">Square 5 Nodes</a></li>
+                            <li><a href="#" id="startRectangle6">Rectangle 6 Nodes</a></li>
+                            <li><a href="#" id="startTriangle3">Triangle 3 Nodes</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="visualizer"><a href="#" id="startVisualizer">Visuzlize!!!</a></li>
+                <li><a href="#" id="startEraseNodes">Erase Nodes</a></li>
+                <li><a href="#" id="startAddNodes">Add Nodes</a></li>
+                <li><a href="#" id="startClearNodes">Clear Nodes</a></li>
+            </ul>
+        </nav>
+        <div></div>
+        <div class="TSPIntroducer">
+            <link rel="stylesheet" href="grid.css">
+            <br>
+            <br>
+            <h1>This is a Travelling Salesman Problem (TSP) algo visualizer!!!</h1>
+            <br>
+        </div>
+        <div id="gridContainer" class="gridContainerClass">
+            <br>
+            <br>
+            <br>
+            <br>
+            <link rel="stylesheet" href="grid.css">
+        </div>
+    </body>
+</html>
+

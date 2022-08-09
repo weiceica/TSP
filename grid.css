@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Itim&family=PT+Sans+Caption&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+
+.TSPIntroducer h1{
+    text-align: center;
+    font-size: 40px;
+    border-top: 3px;
+    border-bottom: 3px;
+    border-color: black;
+    border-style: solid;
+    border-left: 0px;
+    border-right: 0px;
+}
+
+.gridContainerClass{
+    height: 765px;
+    width: 100%;
+    flex-direction: column;
+    background-color: black;
+}
+
+.rowClass{
+    width: 100%;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+}
+
+.nodeClass{
+    width: 80px;
+    height: 100%;
+    background-color: antiquewhite;
+    border-top: 2px;
+    border-bottom: 2px;
+    border-right: 2px;
+    border-left: 2px;
+    border-style: solid;
+    border-color: black;
+}
+
+.sub{
+    margin-top: 4px;
+    margin-left: 21px;
+    width: 35px;
+    height: 35px;
+}
+
+.nodeClass:hover .sub{
+    background-color: lightcoral;
+}

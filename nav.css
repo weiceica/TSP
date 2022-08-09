@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Itim&family=PT+Sans+Caption&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+
+nav{
+    height: 70px;
+    width: 100%;
+    background: black;
+}
+
+label.TSHI{
+    font-family: 'PT Sans Caption', sans-serif;
+    font-style:bold;
+    color:antiquewhite;
+    font-size: 35px;
+    line-height: 70px;
+    padding: 0 100px;
+}
+
+label.TSHI a{
+    text-decoration: none;
+    color: antiquewhite;
+}
+
+label.TSHI a:hover{
+    background-color: gray;
+    border-radius: 20px;
+}
+
+nav ul{
+    float: right;
+    margin-right: 20px;
+}
+
+nav ul li{
+    font-family: 'PT Sans Caption', sans-serif;
+    font-style:bold;
+    font-size: 27px;
+    line-height: 70px;
+    padding: 0 15px;
+    list-style: none;
+    display: inline-block;
+}
+
+nav ul li a{
+    text-decoration: none;
+    color: antiquewhite;
+}
+
+nav ul li a:hover{
+    background-color: gray;
+    border-radius: 10px;
+}
+
+.submenu{
+    display: none;
+}
+
+nav ul li:hover .submenu{
+    display: block;
+    position: absolute;
+    background: black;
+}
+
+.visualizer{
+    background: darkblue;
+}
+
+.visualizer a:hover{
+    background-color: rgb(112, 154, 196)
+}
