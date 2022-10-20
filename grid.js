@@ -170,7 +170,7 @@ function ranGen(event){
         }
     }
     else if(curE.id == "startSquare5"){
-        
+         
     }
     else if(curE.id == "startRectangle6"){
         
