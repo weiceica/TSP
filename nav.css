@@ -23,19 +23,19 @@ label.TSHI a{
 
 label.TSHI a:hover{
     background-color: gray;
-    border-radius: 20px;
+    border-radius: 15px;
 }
 
 nav ul{
     float: right;
-    margin-right: 20px;
+    margin-right: 15px;
 }
 
 nav ul li{
     font-family: 'PT Sans Caption', sans-serif;
     font-style:bold;
-    font-size: 27px;
-    line-height: 70px;
+    font-size: 20px;
+    line-height: 60px;
     padding: 0 15px;
     list-style: none;
     display: inline-block;

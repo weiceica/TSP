@@ -6,7 +6,7 @@
         <meta name="description" content="A TSP heurestic/solver visualizer">  
         <meta name="viewport" content="width=device-width, initial-sacle=1.0">
         <link rel="stylesheet" href="style.css"> 
-        <script src="everything/grid.js"></script>
+        <script src="grid.js"></script>
     </head>
     <body onload="initGrid()">
         <nav>
@@ -16,11 +16,12 @@
                 <li><a class="press" href="#">Algorithms</a>
                     <div class ="submenu">
                         <ul>
-                            <li><a href="#" id="startNearestInsertion">Nearest Insertion</a></li>
-                            <li><a href="#" id="startGreedy">Greedy Search</a></li>
-                            <li><a href="#" id="startNearestNeighbour">Nearest Neighbour</a></li>
-                            <li><a href="#" id="startBranchAndBound">Branch and Bound</a></li>
-                            <li><a href="#" id="startBruteForce">Brute Force</a></li>
+                            <li><a href="#" class="algo" id="startNearestInsertion">Nearest Insertion</a></li>
+                            <li><a href="#" class="algo" id="startGreedy">Greedy Search</a></li>
+                            <li><a href="#" class="algo" id="startNearestNeighbour">Nearest Neighbour</a></li>
+                            <li><a href="#" class="algo" id="startBranchAndBound">Branch and Bound</a></li>
+                            <li><a href="#" class="algo" id="startBruteForce">Brute Force</a></li>
+                            <li><a href="#" class="algo" id="startMST">Minimum Spanning Tree</a></li>
                         </ul>
                     </div>
                 </li>
@@ -58,4 +59,3 @@
         </div>
     </body>
 </html>
-
