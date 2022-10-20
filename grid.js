@@ -1,9 +1,13 @@
 // the "main"
 //------------------------------------------------------------------------
+
 function initGrid(){
     // grid container
     var gridContainer = document.getElementById("gridContainer");
-
+    var can = document.getElementById('c');
+    can.width = gridContainer.getBoundingClientRect().width;
+    console.log(gridContainer.getBoundingClientRect().height);
+    can.height = 658.4;
     for(var i = 0; i < 8; ++i){
         var row = document.createElement('div');
         row.className = "rowClass";
@@ -28,26 +32,12 @@ function initGrid(){
 
     } // for init gridsss
 
-    // // making the lines
-    // var subn = document.getElementsByClassName('sub');
-    // console.log(subn.length);
-    // for(let j = i + 1; j < subn.length; j++){
-    //     var line = document.createElement('div');
-    //     line.className = "line";
-    //     line.id = "l" + "i" + (i + 1) + "j" + (j + 1);
-    //     console.log(line.id);
-    //     gridContainer.appendChild(line);
-    //     let x1 = subn[i].offsetLeft + subn[i].offsetWidth / 2;
-    //     let y1 = subn[i].offsetTop + subn[i].offsetHeight / 2;
-    //     let x2 = subn[j].offsetLeft + subn[j].offsetWidth / 2;
-    //     let y2 = subn[j].offsetTop + subn[j].offsetHeight / 2;
-    //     createLine(x1, y1, x2, y2, line.id);
-    // }
-
-
+   
     getNodes();
     getAlgo();
     getStart();
+    getReStart();
+    
 }
 
 // we define global vars
@@ -68,6 +58,10 @@ function getAlgo(){
 function getStart(){
     var startBtn = document.getElementById('startVisualizer');
     startBtn.addEventListener("click", visualize);
+}
+function getReStart(){
+    var startBtn = document.getElementById('startEraseNodes');
+    startBtn.addEventListener("click", erase);
 }
 
 // helper functions
@@ -98,7 +92,7 @@ function initFunction(event){
     if(curE.style.backgroundColor != "red"){
         curE["active"] = true;
         curE.style.backgroundColor = "red";
-        cities.push({x: getI(curE.id), y: getJ(curE.id)});
+        cities.push({x: getI(curE.id), y: getJ(curE.id), id: curE.id});
     }
     else{
         curE["active"] = false;
@@ -136,25 +130,29 @@ function chooseMode(event){
 /////////////
 /////////////
 /////////////
-// function createLine(x1, y1, x2, y2, lineID) {
-//     let distance = Math.sqrt((x1-x2)*(x1-x2)+(x1-x2)*(x1-x2));
-//     let xMid = (x1+x2)/2;
-//     let yMid = (y1+y2)/2;
-//     let slopeRad = Math.atan2(y1-y2, x1-x2);
-//     let slopeDeg = slopeRad*180 / Math.PI;
-//     console.log(lineID);
-//     // change the fking CSS of the line
-//     let line = document.getElementById(lineID);
-//     console.log(line);
-//     line.style.width = distance;
-//     line.style.height = "2px";
-//     line.style.top = yMid;
-//     line.style.left = xMid - (distance/2);
-//     line.style.color = "black";
-//     line.style.transform = "rotate("+slopeDeg+"deg)";
-// }
- 
+function drawLine(node1ID,node2ID,canVasID){
+    var c = document.getElementById(canVasID);
+    var ctx = c.getContext("2d");
+    c.style.zIndex = 1;
+    console.log(c.height);
 
+    // get node1 and node2 coordinates
+    var n1 = document.getElementById(node1ID);
+    var n2 = document.getElementById(node2ID);
+
+    let n1x = n1.getBoundingClientRect().left + n1.offsetWidth/2;
+    let n1y = n1.getBoundingClientRect().top + n1.offsetHeight/2 - 195;
+    let n2x = n2.getBoundingClientRect().left + n2.offsetWidth/2;
+    let n2y = n2.getBoundingClientRect().top + n2.offsetHeight/2 - 195;
+    console.log(n1y);
+    console.log(n2x);
+    console.log(n2y);
+    ctx.beginPath();
+    ctx.moveTo(n1x, n1y);
+    ctx.lineTo(n2x, n2y);
+    ctx.stroke();
+    ctx.closePath();
+}
 
 
 /*
@@ -172,6 +170,10 @@ The Calculations (AKA visuzliers themselves) this is the part where I calculate 
 ***********
 ********************************
 */
+function erase(){
+var can = document.getElementById('c');
+    can.style.zIndex = -1;
+}
 
 function visualize(event){
     
@@ -228,19 +230,25 @@ function mstM(){
                 }
             }
         }
-        
-        // // for testing purposes only
-        // for(let i = 1; i < prims.length; i++){
-        //     if(i < prims[i].pV){
-        //         console.log(i, " ", prims[i].pV);
-        //     }
-        //     else if(i > prims[i].pV){
-        //         console.log(prims[i].pV, " ", i);
-        //     }
-        //     else{
-        //         console.log("smthg is wrong");
-        //     }
+    }
+
+    console.log(prims.length);
+    // for testing purposes only
+    for(let i = 1; i < prims.length; i++){
+        let idA = cities[i].id;
+        let idB = cities[prims[i].pV].id;
+        drawLine(idA, idB, "c");
+        // if(i < prims[i].pV){
+        //     console.log(i, " ", prims[i].pV);
+        // }
+        // else if(i > prims[i].pV){
+        //     console.log(prims[i].pV, " ", i);
+        // }
+        // else{
+        //     console.log("smthg is wrong");
         // }
     }
+
+
 }
 
