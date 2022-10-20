@@ -8,7 +8,7 @@ function initGrid(){
     can.width = gridContainer.getBoundingClientRect().width;
     console.log(gridContainer.getBoundingClientRect().height);
     can.height = 658.4;
-    for(var i = 0; i < 8; ++i){
+    for(var i = 0; i < 7; ++i){
         var row = document.createElement('div');
         row.className = "rowClass";
         row.id = "rowId" + (i + 1);
@@ -37,7 +37,7 @@ function initGrid(){
     getAlgo();
     getStart();
     getReStart();
-    
+    getClear();
 }
 
 // we define global vars
@@ -62,6 +62,10 @@ function getStart(){
 function getReStart(){
     var startBtn = document.getElementById('startEraseNodes');
     startBtn.addEventListener("click", erase);
+}
+function getClear(){
+    var clearBtn = document.getElementById('startClearNodes');
+    clearBtn.addEventListener("click", clear);
 }
 
 // helper functions
@@ -150,6 +154,8 @@ function drawLine(node1ID,node2ID,canVasID){
     ctx.beginPath();
     ctx.moveTo(n1x, n1y);
     ctx.lineTo(n2x, n2y);
+    ctx.lineWidth = 5;
+    ctx.lineCap = "round";
     ctx.stroke();
     ctx.closePath();
 }
@@ -171,8 +177,22 @@ The Calculations (AKA visuzliers themselves) this is the part where I calculate 
 ********************************
 */
 function erase(){
-var can = document.getElementById('c');
+    var can = document.getElementById('c');
+    var ctx = can.getContext("2d");
     can.style.zIndex = -1;
+    ctx.clearRect(0, 0, can.width, can.height);
+}
+function clear(){
+    let subN = document.getElementsByClassName('sub');
+    for(let i = 0; i < subN.length; ++i){
+        if(subN[i]["active"] == true){
+            subN[i]["active"] = false;
+            subN[i].style.backgroundColor = "rgb(250, 235, 215)";
+            const ind = cities.findIndex(city => city.x == getI(subN[i].id) && city.y == getJ(subN[i].id));
+            cities.splice(ind, 1);
+        }
+    }
+    console.log(cities);
 }
 
 function visualize(event){
