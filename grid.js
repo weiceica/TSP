@@ -38,11 +38,13 @@ function initGrid(){
     getStart();
     getReStart();
     getClear();
+    getRand();
 }
 
 // we define global vars
 let cities = [];
 
+// define nav bars
 function getNodes(){
     var nodes = document.getElementsByClassName('sub');
     for(let i = 0; i < nodes.length; i++){
@@ -67,6 +69,18 @@ function getClear(){
     var clearBtn = document.getElementById('startClearNodes');
     clearBtn.addEventListener("click", clear);
 }
+function getRand(){
+    var ran20 = document.getElementById('startRandom20');
+    var ran5 = document.getElementById('startSquare5');
+    var ran6 = document.getElementById('startRectangle6');
+    var ran3 = document.getElementById('startTriangle3');
+
+    ran20.addEventListener("click", ranGen);
+    ran5.addEventListener("click", ranGen);
+    ran6.addEventListener("click", ranGen);
+    ran3.addEventListener("click", ranGen);
+}
+
 
 // helper functions
 function getI(str){
@@ -87,7 +101,19 @@ function getJ(str){
     retVal = parseInt(str.slice(4));
     return retVal;
 }
+function getActiveNodes(){
+    let subN = document.getElementsByClassName("sub");
+    let count = 0;
+    for(let i = 0; i < subN.length; ++i){
+        if(subN[i]["active"] == true){
+            count ++;
+        }
+    }
+    return count;
+}
     
+
+
 
 // add the god damn event listeners (get all the nodes for city calculation)
 function initFunction(event){
@@ -116,6 +142,42 @@ function chooseMode(event){
     // test:
     console.log(mode);
     return;
+}
+
+// helper ranNum generator
+function randomNum(min, max, s) { 
+    var n = []; 
+    for(var i=0;i<s;i++){ 
+        n.push(Math.floor(Math.random() * max) + min); 
+    } 
+    return n; 
+} 
+
+// function for ran gen
+function ranGen(event){
+    var subN = document.getElementsByClassName("sub");
+    var curE = document.getElementById(event.target.id);
+    console.log(subN[0]);
+    clear();
+    erase();
+    if(curE.id == "startRandom20"){
+        let l = randomNum(0, 159, 40);
+        console.log(l);
+        for(let i = 0; i < 40; i++){
+            subN[l[i]]["active"] = true;
+            subN[l[i]].style.backgroundColor = "red";
+            cities.push({x: getI(subN[l[i]].id), y: getJ(subN[l[i]].id), id: subN[l[i]].id});
+        }
+    }
+    else if(curE.id == "startSquare5"){
+        
+    }
+    else if(curE.id == "startRectangle6"){
+        
+    }
+    else{
+        
+    }
 }
 
 
@@ -192,11 +254,13 @@ function clear(){
             cities.splice(ind, 1);
         }
     }
-    console.log(cities);
+    erase();
 }
 
 function visualize(event){
-    
+    if(getActiveNodes() < 2){
+        return;
+    }
     // tobedeleted
     if(mode == "startMST"){
         mstM(); 
