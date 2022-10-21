@@ -6,7 +6,7 @@ function initGrid(){
     var gridContainer = document.getElementById("gridContainer");
     var can = document.getElementById('c');
     can.width = gridContainer.getBoundingClientRect().width;
-    console.log(gridContainer.getBoundingClientRect().height);
+
     can.height = 658.4;
     for(var i = 0; i < 7; ++i){
         var row = document.createElement('div');
@@ -71,13 +71,13 @@ function getClear(){
 }
 function getRand(){
     var ran20 = document.getElementById('startRandom20');
-    var ran5 = document.getElementById('startSquare5');
-    var ran6 = document.getElementById('startRectangle6');
+    var ran15 = document.getElementById('startRandom1');
+    var ran5 = document.getElementById('startSquare4');
     var ran3 = document.getElementById('startTriangle3');
 
     ran20.addEventListener("click", ranGen);
+    ran15.addEventListener("click", ranGen);
     ran5.addEventListener("click", ranGen);
-    ran6.addEventListener("click", ranGen);
     ran3.addEventListener("click", ranGen);
 }
 
@@ -157,26 +157,53 @@ function randomNum(min, max, s) {
 function ranGen(event){
     var subN = document.getElementsByClassName("sub");
     var curE = document.getElementById(event.target.id);
-    console.log(subN[0]);
     clear();
     erase();
     if(curE.id == "startRandom20"){
-        let l = randomNum(0, 159, 40);
-        console.log(l);
+        let l = randomNum(0, 139, 40);
         for(let i = 0; i < 40; i++){
             subN[l[i]]["active"] = true;
             subN[l[i]].style.backgroundColor = "red";
             cities.push({x: getI(subN[l[i]].id), y: getJ(subN[l[i]].id), id: subN[l[i]].id});
         }
     }
-    else if(curE.id == "startSquare5"){
-         
+    if(curE.id == "startRandom1"){
+        let l = randomNum(0, 139, 15);
+        for(let i = 0; i < 15; i++){
+            subN[l[i]]["active"] = true;
+            subN[l[i]].style.backgroundColor = "red";
+            cities.push({x: getI(subN[l[i]].id), y: getJ(subN[l[i]].id), id: subN[l[i]].id});
+        }
     }
-    else if(curE.id == "startRectangle6"){
-        
+    else if(curE.id == "startSquare4"){
+        subN[126]["active"] = true;
+        subN[126].style.backgroundColor = "red";
+        cities.push({x: getI(subN[126].id), y: getJ(subN[126].id), id: subN[126].id});
+
+        subN[133]["active"] = true;
+        subN[133].style.backgroundColor = "red";
+        cities.push({x: getI(subN[133].id), y: getJ(subN[133].id), id: subN[133].id});
+
+        subN[6]["active"] = true;
+        subN[6].style.backgroundColor = "red";
+        cities.push({x: getI(subN[6].id), y: getJ(subN[6].id), id: subN[6].id});
+
+        subN[13]["active"] = true;
+        subN[13].style.backgroundColor = "red";
+        cities.push({x: getI(subN[13].id), y: getJ(subN[13].id), id: subN[13].id});
     }
     else{
-        
+        subN[9]["active"] = true;
+        subN[9].style.backgroundColor = "red";
+        cities.push({x: getI(subN[9].id), y: getJ(subN[9].id), id: subN[9].id});
+
+        subN[125]["active"] = true;
+        subN[125].style.backgroundColor = "red";
+        cities.push({x: getI(subN[125].id), y: getJ(subN[125].id), id: subN[125].id});
+
+        subN[133]["active"] = true;
+        subN[133].style.backgroundColor = "red";
+        cities.push({x: getI(subN[133].id), y: getJ(subN[133].id), id: subN[133].id});
     }
 }
 
@@ -200,7 +227,6 @@ function drawLine(node1ID,node2ID,canVasID){
     var c = document.getElementById(canVasID);
     var ctx = c.getContext("2d");
     c.style.zIndex = 1;
-    console.log(c.height);
 
     // get node1 and node2 coordinates
     var n1 = document.getElementById(node1ID);
@@ -210,9 +236,6 @@ function drawLine(node1ID,node2ID,canVasID){
     let n1y = n1.getBoundingClientRect().top + n1.offsetHeight/2 - 195;
     let n2x = n2.getBoundingClientRect().left + n2.offsetWidth/2;
     let n2y = n2.getBoundingClientRect().top + n2.offsetHeight/2 - 195;
-    console.log(n1y);
-    console.log(n2x);
-    console.log(n2y);
     ctx.beginPath();
     ctx.moveTo(n1x, n1y);
     ctx.lineTo(n2x, n2y);
@@ -245,25 +268,27 @@ function erase(){
     ctx.clearRect(0, 0, can.width, can.height);
 }
 function clear(){
+    erase();
     let subN = document.getElementsByClassName('sub');
     for(let i = 0; i < subN.length; ++i){
-        if(subN[i]["active"] == true){
-            subN[i]["active"] = false;
-            subN[i].style.backgroundColor = "rgb(250, 235, 215)";
-            const ind = cities.findIndex(city => city.x == getI(subN[i].id) && city.y == getJ(subN[i].id));
-            cities.splice(ind, 1);
-        }
-    }
-    erase();
+        subN[i]["active"] = false;
+        subN[i].style.backgroundColor = "rgb(250, 235, 215)";
+        const ind = cities.findIndex(city => city.x == getI(subN[i].id) && city.y == getJ(subN[i].id));
+        cities.splice(ind, 1);
+    }   
 }
 
 function visualize(event){
+    erase();
     if(getActiveNodes() < 2){
         return;
     }
     // tobedeleted
     if(mode == "startMST"){
         mstM(); 
+    }
+    else if(mode == "startNearestInsertion"){
+        nIM();
     }
 }
 
@@ -277,6 +302,7 @@ function distance(pointA, pointB){
 
 //global object for prims
 let prims = [];
+let ni = [];
 
 function initPrimsMST(){
     prims = [];
@@ -284,6 +310,13 @@ function initPrimsMST(){
     for(let i = 1; i < cities.length; i++){
         prims.push({kV: false, dV: Infinity, pV: -1});
     }
+}
+function initNi(){
+    ni = [];
+    for(let i = 0; i < cities.length; i++){
+        ni.push({elim: false, next:-1});
+    }
+    ni[0].elim = true;
 }
 
 // MST mode
@@ -322,17 +355,51 @@ function mstM(){
         let idA = cities[i].id;
         let idB = cities[prims[i].pV].id;
         drawLine(idA, idB, "c");
-        // if(i < prims[i].pV){
-        //     console.log(i, " ", prims[i].pV);
-        // }
-        // else if(i > prims[i].pV){
-        //     console.log(prims[i].pV, " ", i);
-        // }
-        // else{
-        //     console.log("smthg is wrong");
-        // }
+    }
+}
+
+function nIM(){
+    initNi();
+    let current = 0;
+    let curDist = 100000;
+    let totalDist = 0;
+    let curNextNode = 0;
+
+    for(let i = 1; i < ni.length; i++){
+        curDist = 100000;
+        for(let j = 0; j < ni.length; j++){
+            if(j == current || ni[j].elim == true){
+                continue;
+            }
+            let d = distance(cities[j], cities[current]);
+            if(d < curDist){
+                curDist = d;
+                curNextNode = j;
+            }
+        }
+        ni[current].next = curNextNode;
+        ni[current].elim = true;
+        current = curNextNode;
+        totalDist += Math.sqrt(curDist);
     }
 
+    let d = distance(cities[0], cities[current]);
+    totalDist += Math.sqrt(d);
+    ni[current].next = 0;
 
+    let yin = 0;
+    let yinB = ni[yin].next;
+    let yA = cities[0].id;
+    let yB = cities[yinB].id;
+    drawLine(yA, yB, "c");
+    console.log(ni);
+    console.log(ni.length);
+    for(let i = 1; i < ni.length; i++){
+        let idA = cities[ni[yin].next].id;
+        let idB = cities[yin].id;
+        yin = ni[yin].next;
+        drawLine(idA, idB, "c");
+    }
+    drawLine(cities[yin].id, cities[0].id, "c");
 }
 
