@@ -7,8 +7,8 @@ function initGrid(){
     var can = document.getElementById('c');
     can.width = gridContainer.getBoundingClientRect().width;
 
-    can.height = 658.4;
-    for(var i = 0; i < 7; ++i){
+    can.height = 1200;
+    for(var i = 0; i < 14; ++i){
         var row = document.createElement('div');
         row.className = "rowClass";
         row.id = "rowId" + (i + 1);
@@ -160,7 +160,7 @@ function ranGen(event){
     clear();
     erase();
     if(curE.id == "startRandom20"){
-        let l = randomNum(0, 139, 40);
+        let l = randomNum(0, 279, 40);
         for(let i = 0; i < 40; i++){
             subN[l[i]]["active"] = true;
             subN[l[i]].style.backgroundColor = "red";
@@ -168,7 +168,7 @@ function ranGen(event){
         }
     }
     if(curE.id == "startRandom1"){
-        let l = randomNum(0, 139, 15);
+        let l = randomNum(0, 279, 15);
         for(let i = 0; i < 15; i++){
             subN[l[i]]["active"] = true;
             subN[l[i]].style.backgroundColor = "red";
@@ -176,13 +176,13 @@ function ranGen(event){
         }
     }
     else if(curE.id == "startSquare4"){
-        subN[126]["active"] = true;
-        subN[126].style.backgroundColor = "red";
-        cities.push({x: getI(subN[126].id), y: getJ(subN[126].id), id: subN[126].id});
+        subN[266]["active"] = true;
+        subN[266].style.backgroundColor = "red";
+        cities.push({x: getI(subN[266].id), y: getJ(subN[266].id), id: subN[266].id});
 
-        subN[133]["active"] = true;
-        subN[133].style.backgroundColor = "red";
-        cities.push({x: getI(subN[133].id), y: getJ(subN[133].id), id: subN[133].id});
+        subN[273]["active"] = true;
+        subN[273].style.backgroundColor = "red";
+        cities.push({x: getI(subN[273].id), y: getJ(subN[273].id), id: subN[273].id});
 
         subN[6]["active"] = true;
         subN[6].style.backgroundColor = "red";
@@ -197,13 +197,13 @@ function ranGen(event){
         subN[9].style.backgroundColor = "red";
         cities.push({x: getI(subN[9].id), y: getJ(subN[9].id), id: subN[9].id});
 
-        subN[125]["active"] = true;
-        subN[125].style.backgroundColor = "red";
-        cities.push({x: getI(subN[125].id), y: getJ(subN[125].id), id: subN[125].id});
+        subN[265]["active"] = true;
+        subN[265].style.backgroundColor = "red";
+        cities.push({x: getI(subN[265].id), y: getJ(subN[265].id), id: subN[265].id});
 
-        subN[133]["active"] = true;
-        subN[133].style.backgroundColor = "red";
-        cities.push({x: getI(subN[133].id), y: getJ(subN[133].id), id: subN[133].id});
+        subN[273]["active"] = true;
+        subN[273].style.backgroundColor = "red";
+        cities.push({x: getI(subN[273].id), y: getJ(subN[273].id), id: subN[273].id});
     }
 }
 
