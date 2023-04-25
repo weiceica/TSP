@@ -358,6 +358,7 @@ function mstM(){
     }
 }
 
+let lvv = 0;
 function nIM(){
     initNi();
     let current = 0;
@@ -401,5 +402,62 @@ function nIM(){
         drawLine(idA, idB, "c");
     }
     drawLine(cities[yin].id, cities[0].id, "c");
+    lvv = totalDist
 }
 
+// doing two opt on nearest insertion algorithm
+let path = []
+function TwoOpt(){
+    nIM();
+    path.push(0);
+    let cur = 0;
+    for(let i = 1; i < ni.length; ++i){
+        path.push(ni[cur].next);
+        cur = ni[cur].next;
+    }
+    ni.clear();
+
+    // twoOpt
+    for(let i = 0; i < cities.length * 2; ++i){
+        for(let j = 1; j < cities.length; ++j){
+            for(let k = j + 1; k < cities.length - 1; ++k){
+                let curDistance = distance(cities[path[j-1]], cities[path[k]]);
+                curDistance += distance(cities[path[j]], cities[path[k + 1]]);
+                let newDistance = distance(cities[path[k]], cities[path[k + 1]]);
+                newDistance += distance(points[path[k]], points[path[k+1]]);
+                if(curDistance < newDistance){
+                    let temp = path[j];
+                    path[j] = path[k];
+                    path[k] = temp;
+                }
+            }
+        }
+    }
+
+    let totalDist = 0;
+    for(let i = 0; i < cities.length - 1; ++i){
+        totalDist += sqrt(distance(cities[path[i]], cities[path[i+1]]));
+    }
+    totalDist += sqrt(distance(cities[path[cities.length-1]], cities[path[0]]));
+    lvv = totalDist
+}
+
+let curLength = 0;
+let bestLength = 0;
+let bestPath = [];
+function promising(permLength){
+
+}
+
+function genPerms(){
+    let permLength = 1;
+    if(permLength == path.size()){
+        curLength += sqrt(distance(cities[0], cities[path[permLength-1]]));
+        if(curLength < bestLength){
+            bestPath = path;
+            bestLength = curLength;
+        }
+        curLength -= sqrt(distance(cities[0], cities[path[permLength-1]]));
+        return;
+    }
+}
