@@ -1,7 +1,7 @@
 // the "main"
 //------------------------------------------------------------------------
 
-function initGrid(){
+async function initGrid(){
     // grid container
     var gridContainer = document.getElementById("gridContainer");
     var can = document.getElementById('c');
@@ -35,7 +35,7 @@ function initGrid(){
    
     getNodes();
     getAlgo();
-    getStart();
+    await getStart();
     getReStart();
     getClear();
     getRand();
@@ -57,9 +57,11 @@ function getAlgo(){
         algos[i].addEventListener("click", chooseMode);
     }
 }
-function getStart(){
+async function getStart(){
     var startBtn = document.getElementById('startVisualizer');
-    startBtn.addEventListener("click", visualize);
+    startBtn.addEventListener("click", async () => {
+        await visualize();
+    });
 }
 function getReStart(){
     var startBtn = document.getElementById('startEraseNodes');
@@ -253,7 +255,7 @@ function drawLine(node1ID,node2ID,canVasID){
 *
 *
 *
-The Calculations (AKA visuzliers themselves) this is the part where I calculate all the visuazliers (this code is shit I know)
+The Calculations (AKA visuzliers themselves)
 ********************************
 ***********
 ***********
@@ -278,17 +280,23 @@ function clear(){
     }   
 }
 
-function visualize(event){
+async function visualize(event){
     erase();
     if(getActiveNodes() < 2){
         return;
     }
     // tobedeleted
     if(mode == "startMST"){
-        mstM(); 
+        await mstM(); 
     }
     else if(mode == "startNearestInsertion"){
-        nIM();
+        await nIM();
+    }
+    else if(mode == "startGreedy"){
+        await greedy();
+    }
+    else if(mode == "twoOpt"){
+        await TwoOpt();
     }
 }
 
@@ -311,7 +319,7 @@ function initPrimsMST(){
         prims.push({kV: false, dV: Infinity, pV: -1});
     }
 }
-function initNi(){
+async function initNi(){
     ni = [];
     for(let i = 0; i < cities.length; i++){
         ni.push({elim: false, next:-1});
@@ -320,7 +328,7 @@ function initNi(){
 }
 
 // MST mode
-function mstM(){
+async function mstM(){
     initPrimsMST();
     let current = 0;
 
@@ -352,6 +360,7 @@ function mstM(){
     console.log(prims.length);
     // for testing purposes only
     for(let i = 1; i < prims.length; i++){
+        await new Promise(resolve => setTimeout(resolve, 100));
         let idA = cities[i].id;
         let idB = cities[prims[i].pV].id;
         drawLine(idA, idB, "c");
@@ -359,8 +368,8 @@ function mstM(){
 }
 
 let lvv = 0;
-function nIM(){
-    initNi();
+async function nIM(){
+    await initNi();
     let current = 0;
     let curDist = 100000;
     let totalDist = 0;
@@ -392,6 +401,7 @@ function nIM(){
     let yinB = ni[yin].next;
     let yA = cities[0].id;
     let yB = cities[yinB].id;
+    await new Promise(resolve => setTimeout(resolve, 100));
     drawLine(yA, yB, "c");
     console.log(ni);
     console.log(ni.length);
@@ -399,48 +409,87 @@ function nIM(){
         let idA = cities[ni[yin].next].id;
         let idB = cities[yin].id;
         yin = ni[yin].next;
+        await new Promise(resolve => setTimeout(resolve, 100));
         drawLine(idA, idB, "c");
     }
+    await new Promise(resolve => setTimeout(resolve, 100));
     drawLine(cities[yin].id, cities[0].id, "c");
     lvv = totalDist
 }
 
 // doing two opt on nearest insertion algorithm
 let path = []
-function TwoOpt(){
-    nIM();
-    path.push(0);
-    let cur = 0;
-    for(let i = 1; i < ni.length; ++i){
-        path.push(ni[cur].next);
-        cur = ni[cur].next;
-    }
-    ni.clear();
+async function TwoOpt(){
+    await nIM();
 
+    let startTime = new Date();
+    let endTime = new Date(startTime.getTime() + 8000);
+    console.log(ni);
     // twoOpt
-    for(let i = 0; i < cities.length * 2; ++i){
-        for(let j = 1; j < cities.length; ++j){
-            for(let k = j + 1; k < cities.length - 1; ++k){
-                let curDistance = distance(cities[path[j-1]], cities[path[k]]);
-                curDistance += distance(cities[path[j]], cities[path[k + 1]]);
-                let newDistance = distance(cities[path[k]], cities[path[k + 1]]);
-                newDistance += distance(points[path[k]], points[path[k+1]]);
-                if(curDistance < newDistance){
-                    let temp = path[j];
-                    path[j] = path[k];
-                    path[k] = temp;
+    let tour = [];
+    // Assuming ni[] contains the tour information after niM()
+    let current = 0;
+    while (ni[current].next !== 0) {
+        tour.push(current);
+        current = ni[current].next;
+    }
+    tour.push(current); // Add the last city
+
+    let improved = true;
+    while (improved) {
+        let curTime = new Date();
+        if(curTime >= endTime){
+            break;
+        }
+        improved = false;
+        for (let i = 0; i < tour.length - 1; i++) {
+            for (let j = i + 2; j < tour.length; j++) {
+                if (costChange(tour, i, j) < 0) {
+                    reverseSegment(tour, i + 1, j);
+                    improved = true;
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    updateCanvas(tour);
                 }
             }
         }
     }
-
-    let totalDist = 0;
-    for(let i = 0; i < cities.length - 1; ++i){
-        totalDist += sqrt(distance(cities[path[i]], cities[path[i+1]]));
-    }
-    totalDist += sqrt(distance(cities[path[cities.length-1]], cities[path[0]]));
-    lvv = totalDist
 }
+
+// for two-opt
+function updateCanvas(tour) {
+    let canvasId = 'c';
+    let ctx = document.getElementById(canvasId).getContext('2d');
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    for (let i = 0; i < tour.length - 1; i++) {
+        let city1 = cities[tour[i]];
+        let city2 = cities[tour[i + 1]];
+        drawLine(city1.id, city2.id, canvasId);
+    }
+    // Connect the last city back to the first
+    let lastCity = cities[tour[tour.length - 1]];
+    let firstCity = cities[tour[0]];
+    drawLine(lastCity.id, firstCity.id, canvasId);
+}
+
+function costChange(tour, i, j) {
+    let city1 = cities[tour[i]], city2 = cities[tour[i + 1]], 
+        city3 = cities[tour[j]], city4 = cities[tour[(j + 1) % tour.length]];
+    return distance(city1, city3) + distance(city2, city4) 
+         - distance(city1, city2) - distance(city3, city4);
+}
+
+function reverseSegment(tour, start, end) {
+    while (start < end) {
+        let temp = tour[start];
+        tour[start] = tour[end];
+        tour[end] = temp;
+        start++;
+        end--;
+    }
+}
+
+
+
 
 let curLength = 0;
 let bestLength = 0;
@@ -460,4 +509,45 @@ function genPerms(){
         curLength -= sqrt(distance(cities[0], cities[path[permLength-1]]));
         return;
     }
+}
+
+
+
+
+
+
+// startNearestInsertion algorithm 
+
+async function greedy() {
+    if (cities.length < 2) return; // Need at least two cities
+
+    let visited = new Array(cities.length).fill(false);
+    let currentCityIndex = 0; // Starting from the first city
+    visited[currentCityIndex] = true;
+
+    for (let i = 1; i < cities.length; i++) {
+        let nearestCityIndex = -1;
+        let minDistance = Infinity;
+
+        for (let j = 0; j < cities.length; j++) {
+            if (!visited[j]) {
+                let dist = distance(cities[currentCityIndex], cities[j]);
+                if (dist < minDistance) {
+                    nearestCityIndex = j;
+                    minDistance = dist;
+                }
+            }
+        }
+
+        // Visit the nearest city
+        if (nearestCityIndex != -1) {
+            visited[nearestCityIndex] = true;
+            await new Promise(resolve => setTimeout(resolve, 100));
+            drawLine(cities[currentCityIndex].id, cities[nearestCityIndex].id, 'c');
+            currentCityIndex = nearestCityIndex;
+        }
+    }
+
+    await new Promise(resolve => setTimeout(resolve, 100));
+    drawLine(cities[currentCityIndex].id, cities[0].id, 'c');
 }
